@@ -9,7 +9,6 @@ interface QuestionBarProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
-  className: string;
 }
 
 export default function QuestionBar({
@@ -17,10 +16,9 @@ export default function QuestionBar({
   onClick,
   value,
   onKeyDown,
-  className,
 }: QuestionBarProps) {
   return (
-    <div className={`flex bg-[#2d2f37] rounded-4xl p-2 justify-between shadow-lg border-1 mt-2 ${className}`}>
+    <div className={`flex bg-[#2d2f37] rounded-4xl p-2 justify-between shadow-lg border-1 mt-2`}>
         <Input
           className="border-none ml-2 text-white md:text-md caret-white focus-visible:ring-0 placeholder:text-gray-400"
           onChange={onChange}

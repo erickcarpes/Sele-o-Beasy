@@ -80,7 +80,6 @@ export default function Chatbot() {
             </div>
           )}
           <QuestionBar
-            className={`${mensagens.length === 0 ? "block" : ""}`}
             onClick={() => {
               if (question === "") return;
               handleSend(question);
