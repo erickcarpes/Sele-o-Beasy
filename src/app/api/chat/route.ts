@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { GoogleGenAI } from "@google/genai";
 
-// Instanciar o cliente OpenAI com a chave da API
-const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_GENAI_API_KEY });
+// Instanciar o cliente Gemini com a chave da API
+const gemini = new GoogleGenAI({ apiKey: process.env.GOOGLE_GENAI_API_KEY });
 
 // Rota para lidar com requisições GET
 export async function GET() {
@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
     });
 
     // Chama a OpenAI para obter a resposta do bot
-    const response = await ai.models.generateContent({
+    const response = await gemini.models.generateContent({
       model: "gemini-2.0-flash",
       contents: question,
     });

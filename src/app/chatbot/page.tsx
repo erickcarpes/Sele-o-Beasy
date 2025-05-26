@@ -1,5 +1,4 @@
 "use client";
-import Bubble from "@/components/bubble";
 import QuestionBar from "@/components/questionBar";
 import Spinner from "@/components/spinner";
 import Wrapper from "@/components/wrapper";
@@ -8,13 +7,13 @@ import { useCallback, useEffect, useState } from "react";
 interface Mensagem {
   id: number;
   texto: string;
-  userRole: "user" | "chat";
+  userRole: "USER" | "CHAT";
 }
 
 export default function Chatbot() {
   const [isLoading, setIsLoading] = useState(true);
   const [question, setQuestion] = useState("");
-  const [mensagens, setMensagens] = useState([]);
+  const [mensagens, setMensagens] = useState([] as Mensagem[]);
 
   const carregarMensagens = useCallback(async () => {
     const msgs = await getMessages();
