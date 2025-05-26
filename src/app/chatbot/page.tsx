@@ -1,8 +1,9 @@
 "use client";
 import Bubble from "@/components/bubble";
 import QuestionBar from "@/components/questionBar";
+import Spinner from "@/components/spinner";
 import Wrapper from "@/components/wrapper";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface Mensagem {
   id: number;
@@ -11,16 +12,20 @@ interface Mensagem {
 }
 
 export default function Chatbot() {
+  const [isLoading, setIsLoading] = useState(true);
   const [question, setQuestion] = useState("");
   const [mensagens, setMensagens] = useState([]);
 
-  useEffect(() => {
-    const carregarMensagens = async () => {
-      const msgs = await getMessages();
-      setMensagens(msgs);
-    };
-    carregarMensagens();
+  const carregarMensagens = useCallback(async () => {
+    const msgs = await getMessages();
+    setMensagens(msgs);
+    setIsLoading(false);
   }, []);
+
+  useEffect(() => {
+    setIsLoading(true);
+    carregarMensagens();
+  }, [carregarMensagens]);
 
   const handleSend = async (question: string) => {
     const response = await fetch("/api/chat", {
@@ -30,6 +35,8 @@ export default function Chatbot() {
       },
       body: JSON.stringify({ question }),
     });
+
+    await carregarMensagens();
 
     if (!response.ok) {
       console.error("Erro ao enviar a mensagem");
@@ -56,25 +63,42 @@ export default function Chatbot() {
   };
 
   return (
-    <div className="flex flex-col items-center w-screen h-screen p-5 bg-[#1b1c21]">
-      <div className="flex flex-col w-full md:w-120 lg:w-150">
-        <div className="flex items-end flex-col w-[92%] mx-auto gap-2">
-          <Wrapper>
-            {mensagens.map((msg: Mensagem) => (
-              <Bubble key={msg.id} user={msg.userRole} message={msg.texto} />
-            ))}
-          </Wrapper>
+    <div
+      className={`flex flex-col items-center ${
+        mensagens.length === 0 ? "justify-center" : "justify-start"
+      } w-screen h-screen p-5 bg-[#1b1c21]`}
+    >
+      {isLoading ? (
+        <Spinner></Spinner>
+      ) : (
+        <div
+          className={`flex flex-col w-full min-h-full justify-center md:w-120 lg:w-150`}
+        >
+          {mensagens.length !== 0 && (
+            <div className="flex h-full overflow-y-auto gap-2">
+              <Wrapper messages={mensagens}></Wrapper>
+            </div>
+          )}
+          <QuestionBar
+            className={`${mensagens.length === 0 ? "block" : ""}`}
+            onClick={() => {
+              if (question === "") return;
+              handleSend(question);
+              setQuestion("");
+            }}
+            onChange={(e) => setQuestion(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                if (question.trim() !== "") {
+                  handleSend(question.trim());
+                  setQuestion("");
+                }
+              }
+            }}
+            value={question}
+          ></QuestionBar>
         </div>
-        <QuestionBar
-          onClick={() => {
-            if (question === "") return;
-            handleSend(question);
-            setQuestion("");
-          }}
-          onChange={(e) => setQuestion(e.target.value)}
-          value={question}
-        ></QuestionBar>
-      </div>
+      )}
     </div>
   );
 }

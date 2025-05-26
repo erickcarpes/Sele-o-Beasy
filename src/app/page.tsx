@@ -28,7 +28,7 @@ export default function Home() {
       <div className="flex justify-center items-center w-[30%] h-full bg-green-800">
         <Button
           onClick={handleClick}
-          className=" w-40 h-17 bg-[#2d2f37] text-2xl text-green-600 hover:cursor-pointer hover:scale-110 transition-transform ease-in-out duration-300"
+          className="w-40 h-17 bg-[#2d2f37] text-2xl text-green-600 hover:bg-white hover:cursor-pointer hover:scale-110 transition-transform ease-in-out duration-300"
         >
           Entrar
         </Button>

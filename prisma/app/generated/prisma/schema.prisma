@@ -9,10 +9,10 @@ datasource db {
 }
 
 model Mensagem {
-  id      Int      @id @default(autoincrement())
-  texto   String
-  createdAt    DateTime @default(now())
-  userRole UserRole
+  id        Int      @id @default(autoincrement())
+  texto     String
+  createdAt DateTime @default(now())
+  userRole  UserRole
 }
 
 enum UserRole {
