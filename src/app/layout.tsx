@@ -25,16 +25,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <SidebarProvider>
       <html lang="en">
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <DesktopSidebar />
-          <SidebarTrigger />
           {children}
         </body>
       </html>
-    </SidebarProvider>
   );
 }

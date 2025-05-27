@@ -31,7 +31,7 @@ export default function Home() {
   };
 
   const handleClick = async () => {
-    const chat_id = await getMostRecentChat()
+    const chat_id =  getMostRecentChat()
     setTransition(true);
     setTimeout(() => {
       router.push(`/chatbot/${chat_id}`);
