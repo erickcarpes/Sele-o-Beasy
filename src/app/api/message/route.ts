@@ -4,15 +4,14 @@ import { NextResponse } from "next/server";
 const messageService = new MessageService();
 
 // POST: Cria uma nova mensagem de usuário
-export async function POST(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
-  const { id } = params;
-  const { question } = await request.json();
+export async function POST(request: Request) {
+  const { chat_id, question } = await request.json();
 
   try {
-    const botMessage = await messageService.createUserMessage({ id, question });
+    const botMessage = await messageService.createUserMessage({
+      chat_id,
+      question,
+    });
     return NextResponse.json(
       { message: botMessage },
       {

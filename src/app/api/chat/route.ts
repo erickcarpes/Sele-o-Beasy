@@ -5,14 +5,16 @@ const chatService = new ChatService();
 
 // Cria novo chat
 export async function POST(request: NextRequest) {
-  const { nome } = await request.json();
+  const body = await request.json().catch(() => null);
+
+  const nome = body?.nome || "Novo Chat";
 
   try {
-    const chat = await chatService.createChat(nome);
+    const chat = await chatService.createChat({nome});
     return NextResponse.json(chat, { status: 201 });
   } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
-

@@ -3,7 +3,7 @@ import Bubble from "./bubble";
 interface Mensagem {
   id: number;
   texto: string;
-  userRole: "USER" | "CHAT";
+  role: "USER" | "CHAT";
 }
 
 export default function Wrapper({ messages }: { messages: Mensagem[] }) {
@@ -14,7 +14,7 @@ export default function Wrapper({ messages }: { messages: Mensagem[] }) {
             <Bubble
               key={msg.id}
               message={msg.texto}
-              userRole={msg.userRole}
+              role={msg.role}
             ></Bubble>
           ))}
         </div>

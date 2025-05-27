@@ -7,7 +7,7 @@ export default function Home() {
   const [transition, setTransition] = useState(false);
   const router = useRouter();
 
- const chat_id = async () => {
+ const getMostRecentChat = async () => {
     const response = await fetch("/api/chat/mostRecent", {
       method: "GET",
       headers: {
@@ -15,7 +15,7 @@ export default function Home() {
       },
     });
     
-    if (!response.ok) {
+    if (response.status === 404) {
       const newChat = await fetch("/api/chat", {
         method: "POST",
         headers: {
@@ -29,13 +29,14 @@ export default function Home() {
     const data = await response.json();
     return data.id;
   };
-  
-  const handleClick = () => {
+
+  const handleClick = async () => {
+    const chat_id = await getMostRecentChat()
     setTransition(true);
     setTimeout(() => {
       router.push(`/chatbot/${chat_id}`);
-      setTransition(false);
     }, 800);
+    setTransition(false);
   };
   return (
     <div
@@ -49,10 +50,10 @@ export default function Home() {
         </h1>
       </div>
 
-      <div className="flex justify-center items-center w-[30%] h-full bg-green-800">
+      <div className="flex justify-center items-center w-[30%] h-full bg-red-700">
         <Button
           onClick={handleClick}
-          className="w-40 h-17 bg-[#2d2f37] text-2xl text-green-600 hover:bg-white hover:cursor-pointer hover:scale-110 transition-transform ease-in-out duration-300"
+          className="w-40 h-17 bg-[#2d2f37] text-2xl text-red-700 hover:bg-white hover:cursor-pointer hover:scale-110 transition-transform ease-in-out duration-300"
         >
           Entrar
         </Button>

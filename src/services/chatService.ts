@@ -55,7 +55,7 @@ class ChatService {
           createdAt: "desc",
         },
       });
-      return chat?.id;
+      return chat;
     } catch (error) {
       console.error("Erro ao buscar chat mais recente:", error);
       throw new Error("Erro ao buscar chat mais recente");

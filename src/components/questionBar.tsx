@@ -30,7 +30,7 @@ export default function QuestionBar({
           onClick={onClick}
           className="bg-transparent rounded-4xl mr-2 hover:bg-[#44464d] hover:cursor-pointer"
         >
-          <Send className="text-green-600 hover:text-white" />
+          <Send className="text-red-700 hover:text-white" />
         </Button>
     </div>
   );

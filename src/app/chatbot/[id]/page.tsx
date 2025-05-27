@@ -4,64 +4,77 @@ import Spinner from "@/components/spinner";
 import Wrapper from "@/components/wrapper";
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
+import { useParams } from "next/navigation";
+import { get } from "http";
 
 interface Mensagem {
   id: number;
   texto: string;
-  userRole: "USER" | "CHAT";
+  role: "USER" | "CHAT";
 }
 
 export default function Chatbot() {
   const [isLoading, setIsLoading] = useState(true);
   const [question, setQuestion] = useState("");
   const [mensagens, setMensagens] = useState([] as Mensagem[]);
-
-  const carregarMensagens = useCallback(async () => {
-    const msgs = await getMessages();
-    setMensagens(msgs);
-    setIsLoading(false);
-  }, []);
-
-  useEffect(() => {
-    setIsLoading(true);
-    carregarMensagens();
-  }, [carregarMensagens]);
-
+  const { id } = useParams();
+  
+  
+  
+  
   const handleSend = async (question: string) => {
-    const response = await fetch("/api/chat", {
+    const response = await fetch("/api/message", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ question }),
+      body: JSON.stringify({ chat_id: id, question }),
     });
-
-    await carregarMensagens();
-
+    
     if (!response.ok) {
       console.error("Erro ao enviar a mensagem");
       return;
     }
-
+    
+    atualizarMensagens();
+    
     const data = await response.json();
     return data.message;
   };
-
-  const getMessages = async () => {
-    const response = await fetch("/api/chat", {
+  
+  const getMessages = useCallback(async () => {
+    const response = await fetch(`/api/chat/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
     });
+
     if (!response.ok) {
       console.error("Erro ao buscar mensagens");
       return [];
     }
-    const data = await response.json();
-    return data;
-  };
 
+    const data = await response.json();
+    return data.mensagens;
+  }, [id]);
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      setIsLoading(true);
+      const msgs = await getMessages();
+      setMensagens(msgs);
+      setIsLoading(false);
+    };
+
+    fetchMessages();
+  }, [getMessages]);
+
+  const atualizarMensagens = async () => {
+    const msgs = await getMessages();
+    setMensagens(msgs);
+  };
+  
   return (
     <div
       className={`flex flex-col items-center w-screen h-screen p-5 bg-[#1b1c21]`}
@@ -83,7 +96,7 @@ export default function Chatbot() {
                 <Image src="/taurus-logo.png" width={40} height={10} alt="Taurus Logo" />
                 <h1 className="text-2xl mb-2">Oi, eu sou o TaurusBot!</h1>
               </div>
-              <h3>Como posso te ajudar hoje?</h3>
+              <h3>Como posso te ajudar hoje? {id}</h3>
             </div>
           ) : (
             <div className="flex h-full overflow-y-auto gap-2">

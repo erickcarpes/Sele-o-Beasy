@@ -2,7 +2,7 @@ import { GoogleGenAI } from "@google/genai";
 import prisma from "@/lib/prisma";
 
 interface CreateQuestionParams {
-  id: string;
+  chat_id: string;
   question: string;
 }
 
@@ -11,24 +11,24 @@ const gemini = new GoogleGenAI({ apiKey: process.env.GOOGLE_GENAI_API_KEY });
 
 class MessageService {
   // Rota para criar mensagens no chat
-  async createUserMessage({ id, question }: CreateQuestionParams) {
+  async createUserMessage({ chat_id, question }: CreateQuestionParams) {
     try {
       // Salva a pergunta do usuário no banco de dados
       await prisma.mensagem.create({
         data: {
           texto: question,
           role: "USER",
-          chat_id: id,
+          chat_id: chat_id,
         },
       });
-      const botMessage = this.createChatMessage(id, question);
+      const botMessage = this.createChatMessage({chat_id, question});
       return botMessage;
     } catch (error: unknown) {
       console.error("Erro ao criar mensagem de usuário:", error);
     }
   }
 
-  async createChatMessage(id: string, question: string) {
+  async createChatMessage({chat_id, question}: CreateQuestionParams) {
     try {
       // Chama a OpenAI para obter a resposta do bot
       const response = await gemini.models.generateContent({
@@ -44,7 +44,7 @@ class MessageService {
         data: {
           texto: botMessage,
           role: "CHAT",
-          chat_id: id,
+          chat_id: chat_id,
         },
       });
 
