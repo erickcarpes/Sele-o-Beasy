@@ -8,11 +8,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Chat {
+  id String      @id @default(uuid())
+  nome String
+  createdAt DateTime @default(now())
+  mensagens Mensagem[]
+}
+
 model Mensagem {
-  id      Int      @id @default(autoincrement())
+  id      String      @id @default(uuid())
   texto   String
   createdAt    DateTime @default(now())
-  userRole UserRole
+  role UserRole
+  chat_id String
+  chat   Chat   @relation(fields: [chat_id], references: [id])
 }
 
 enum UserRole {

@@ -6,10 +6,34 @@ import { useRouter } from "next/navigation";
 export default function Home() {
   const [transition, setTransition] = useState(false);
   const router = useRouter();
+
+ const chat_id = async () => {
+    const response = await fetch("/api/chat/mostRecent", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    
+    if (!response.ok) {
+      const newChat = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await newChat.json();
+      return data.id;
+    }
+
+    const data = await response.json();
+    return data.id;
+  };
+  
   const handleClick = () => {
     setTransition(true);
     setTimeout(() => {
-      router.push("/chatbot");
+      router.push(`/chatbot/${chat_id}`);
       setTransition(false);
     }, 800);
   };
@@ -17,11 +41,11 @@ export default function Home() {
     <div
       className={`flex items-center justify-center w-screen h-screen ${
         transition ? "opacity-0" : "opacity-100"
-      } transition-opacity duration-1500 ease-in-out`}
+      } transition-opacity duration-800 ease-in-out`}
     >
       <div className="flex justify-center items-center w-[70%] h-full  bg-[#1b1c21]">
         <h1 className="text-white text-6xl font-semibold">
-          ChatBot - BeasyBox
+          ChatBot - Taurus
         </h1>
       </div>
 
