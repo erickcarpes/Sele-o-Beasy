@@ -1,7 +1,6 @@
 import { Trash } from "lucide-react";
 import { Pencil } from "lucide-react";
 import { Check } from "lucide-react";
-import router from "next/router";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 

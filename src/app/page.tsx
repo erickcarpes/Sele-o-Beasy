@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { AlertComp } from "@/components/alertComp";
 
 export default function Home() {
-  const [transition, setTransition] = useState(false);
   const [chat_id, setChat_id] = useState<string | null>(null);
   const [isWaitingToRedirect, setIsWaitingToRedirect] = useState(false);
   const [alert, setAlert] = useState<{
@@ -57,11 +56,11 @@ export default function Home() {
   };
 
   useEffect(() => {
-  if (isWaitingToRedirect && chat_id) {
-    router.push(`/chatbot/${chat_id}`);
-    setIsWaitingToRedirect(false);
-  }
-}, [chat_id, isWaitingToRedirect, router]);
+    if (isWaitingToRedirect && chat_id) {
+      router.push(`/chatbot/${chat_id}`);
+      setIsWaitingToRedirect(false);
+    }
+  }, [chat_id, isWaitingToRedirect, router]);
 
   return (
     <>
@@ -69,9 +68,7 @@ export default function Home() {
         <AlertComp title={alert.title} description={alert.description} />
       )}
       <div
-        className={`flex items-center justify-center w-screen h-screen ${
-          transition ? "opacity-0" : "opacity-100"
-        } transition-opacity duration-800 ease-in-out`}
+        className={`flex items-center justify-center w-screen h-screen`}
       >
         <div className="flex justify-center items-center w-[70%] h-full  bg-[#1b1c21]">
           <h1 className="text-white text-6xl font-semibold">
