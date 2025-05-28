@@ -4,9 +4,8 @@ import { ChatService } from "@/services/chatService";
 const chatService = new ChatService();
 
 // GET específico: /api/chat/[id]
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params;
-  console.log("ID do chat:", id);
+export async function GET(req: NextRequest, context: { params: { id: string } }) {
+  const { id } = context.params;
 
   if (!id) {
     return NextResponse.json({ error: "Id é necessário" }, { status: 400 });

@@ -2,13 +2,13 @@
 import QuestionBar from "@/components/questionBar";
 import Spinner from "@/components/spinner";
 import Wrapper from "@/components/wrapper";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { MobileSideBar } from "@/components/mobileSideBar";
 
 interface Mensagem {
-  id: number;
+  id: string;
   texto: string;
   role: "USER" | "CHAT";
 }
@@ -16,16 +16,31 @@ interface Mensagem {
 interface Chat {
   id: string;
   nome: string;
+  mensagens: Mensagem[];
 }
 
 export default function Chatbot() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [question, setQuestion] = useState("");
-  const [mensagens, setMensagens] = useState([] as Mensagem[]);
-  const [chats, setChats] = useState([] as Chat[]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [question, setQuestion] = useState<string>("");
+  const [mensagens, setMensagens] = useState<Mensagem[]>([]);
+  const [chats, setChats] = useState<Chat[]>([]);
   const { id } = useParams();
 
   const handleSend = async (question: string) => {
+    const userMessage: Mensagem = {
+      id: new Date().toISOString(),
+      texto: question,
+      role: "USER",
+    };
+    setMensagens((prevMensagens) => [...prevMensagens, userMessage]);
+
+    const chatMessage: Mensagem = {
+      id: "temp-id",
+      texto: "Digitando...",
+      role: "CHAT",
+    };
+    setMensagens((prevMensagens) => [...prevMensagens, chatMessage]);
+
     const response = await fetch("/api/message", {
       method: "POST",
       headers: {
@@ -36,50 +51,62 @@ export default function Chatbot() {
 
     if (!response.ok) {
       console.error("Erro ao enviar a mensagem");
+      setMensagens((prev) =>
+        prev.map((msg) =>
+          msg.id === "temp-id"
+            ? { ...msg, texto: "Erro ao gerar resposta." }
+            : msg
+        )
+      );
       return;
     }
 
-    atualizarMensagens();
-
     const data = await response.json();
-    return data.message;
+    console.log("Resposta da do GEMINI:", data);
+
+    setMensagens((prev) =>
+      prev.map((msg) =>
+        msg.id === "temp-id"
+          ? {
+              id: new Date().toISOString(),
+              texto: data.message,
+              role: "CHAT",
+            }
+          : msg
+      )
+    );
   };
 
-  const getMessages = useCallback(async () => {
-    const response = await fetch(`/api/chat/${id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      console.error("Erro ao buscar mensagens");
-      return [];
+  useEffect(() => {
+    if (!id) {
+      return;
     }
 
-    const data = await response.json();
-    return data.mensagens;
-  }, [id]);
-
-  useEffect(() => {
-    const fetchMessages = async () => {
+    const getMessages = async () => {
       setIsLoading(true);
-      const msgs = await getMessages();
-      setMensagens(msgs);
+      const response = await fetch(`/api/chat/${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        console.error("Erro ao buscar mensagens");
+        return [];
+      }
+
+      const data = await response.json();
+      console.log("Resposta da API Mensagens:", data);
+      setMensagens(data.mensagens);
       setIsLoading(false);
     };
 
-    fetchMessages();
-  }, [getMessages]);
-
-  const atualizarMensagens = async () => {
-    const msgs = await getMessages();
-    setMensagens(msgs);
-  };
+    getMessages();
+  }, [id]);
 
   const getAllChats = async () => {
-    const response = await fetch("/api/chat", {
+    const response = await fetch("/api/chat/all", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -92,16 +119,13 @@ export default function Chatbot() {
     }
 
     const data = await response.json();
-    return data.chats;
-  }
+    console.log("Resposta da API Chats:", data);
+
+    setChats(data);
+  };
 
   useEffect(() => {
-    const fetchChats = async () => {
-      const chatsData = await getAllChats();
-      setChats(chatsData);
-    };
-
-    fetchChats();
+    getAllChats();
   }, []);
 
   return (
@@ -109,8 +133,8 @@ export default function Chatbot() {
       className={`flex flex-col items-center w-screen max-h-screen p-5 bg-[#1b1c21]`}
     >
       <div className="flex w-full border-b-1 mb-5">
-        <div className="flex justify-start">
-          <MobileSideBar chats={chats}/>
+        <div className="absolute top-5 left-5 rounded-3xl p-2">
+          <MobileSideBar chats={chats} />
         </div>
         <div className="flex w-screen justify-center items-center">
           <h1 className="text-white text-4xl font-semibold mb-5">Taurus</h1>
@@ -123,7 +147,7 @@ export default function Chatbot() {
         </div>
       ) : (
         <div
-          className={`flex flex-col w-full max-h-full overflow-hidden justify-center md:w-120 lg:w-150`}
+          className={`flex flex-col w-full h-full max-h-full overflow-hidden justify-center md:w-120 lg:w-150`}
         >
           {mensagens.length === 0 ? (
             <div className="text-center text-white mb-3 justify-center">
@@ -136,7 +160,7 @@ export default function Chatbot() {
                 />
                 <h1 className="text-2xl mb-2">Oi, eu sou o TaurusBot!</h1>
               </div>
-              <h3>Como posso te ajudar hoje? {id}</h3>
+              <h3>Como posso te ajudar hoje?</h3>
             </div>
           ) : (
             <div className="flex h-full overflow-y-auto gap-2">

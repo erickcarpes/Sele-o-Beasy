@@ -18,9 +18,9 @@ export default function QuestionBar({
   onKeyDown,
 }: QuestionBarProps) {
   return (
-    <div className={`flex bg-[#2d2f37] rounded-4xl p-2 justify-between shadow-lg border-1 mt-2`}>
+    <div className={`flex bg-[#2d2f37] rounded-4xl px-4 py-2 justify-between shadow-lg border-1 mt-2`}>
         <Input
-          className="border-none ml-2 text-white md:text-md caret-white focus-visible:ring-0 placeholder:text-gray-400"
+          className="border-none text-white md:text-md caret-white focus-visible:ring-0 placeholder:text-gray-400"
           onChange={onChange}
           value={value}
           placeholder="O que desejas perguntar?"
@@ -28,9 +28,9 @@ export default function QuestionBar({
         ></Input>
         <Button
           onClick={onClick}
-          className="bg-transparent rounded-4xl mr-2 hover:bg-[#44464d] hover:cursor-pointer"
+          className="bg-transparent rounded-4xl gap-0 p-0 hover:bg-[#44464d] hover:cursor-pointer"
         >
-          <Send className="text-red-700 hover:text-white" />
+          <Send className="text-red-700 hover:text-white p-0" />
         </Button>
     </div>
   );

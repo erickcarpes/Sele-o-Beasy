@@ -16,7 +16,7 @@ interface Chat {
   nome: string;
 }
 
-export function MobileSideBar({chats}: {chats: Chat[]}) {
+export function MobileSideBar({ chats }: { chats: Chat[] }) {
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -29,20 +29,25 @@ export function MobileSideBar({chats}: {chats: Chat[]}) {
           ></Image>
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="bg-[#2d2f37] text-white w-50">
+      <SheetContent
+        side="left"
+        className="bg-[#2d2f37] text-white w-50 rounded-r-4xl"
+      >
         <SheetHeader>
           <SheetTitle className="text-white text-2xl">Taurus</SheetTitle>
         </SheetHeader>
         <div className="flex flex-col gap-4 p-4">
           <button className="flex w-full gap-3 border-l-1 px-2 py-1">
-              <Info />
-              <h2>Sobre nós</h2>
+            <Info />
+            <h2>Sobre nós</h2>
           </button>
 
           <div className="flex w-full gap-3 border-l-1 px-2 py-1">
-              <Brain />
+            <Brain />
+            <div className="flex justify-between w-full">
               <h2>Chats</h2>
-              <Plus className="rounded-sm border-1 bg-green-600"/>
+              <Plus className="rounded-sm border-1 bg-green-600" />
+            </div>
           </div>
 
           <ChatsDisplay chats={chats}></ChatsDisplay>

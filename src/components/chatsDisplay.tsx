@@ -11,10 +11,12 @@ export function ChatsDisplay({chats}: {chats: Chat[]}) {
       {chats.map((chat) => (
         <div
           key={chat.id}
-          className="flex p-4 w-full bg-gray-800 justify-between rounded-lg shadow-md"
+          className="flex p-2 w-full justify-between rounded-lg shadow-md"
         >
-          <h2 className="text-lg font-semibold text-white">{chat.nome}</h2>
+          <button className="text-white hover:cursor-pointer">{chat.nome}</button>
+          <button className="hover:cursor-pointer">
           <Trash className="bg-red-600"></Trash>
+          </button>
         </div>
       ))}
     </div>
