@@ -5,6 +5,7 @@ interface Mensagem {
   id: string;
   texto: string;
   role: "USER" | "CHAT";
+  createdAt?: Date;
 }
 
 export default function Wrapper({ messages }: { messages: Mensagem[] }) {
@@ -18,7 +19,7 @@ export default function Wrapper({ messages }: { messages: Mensagem[] }) {
     <div className={`flex flex-col w-full bg-[#1b1c21]`}>
       <div className="flex flex-col gap-4">
         {messages.map((msg: Mensagem) => (
-          <Bubble key={msg.id} message={msg.texto} role={msg.role}></Bubble>
+          <Bubble key={msg.id} message={msg.texto} role={msg.role} createdAt={msg.createdAt}></Bubble>
         ))}
       </div>
       <div ref={bottomRef} />

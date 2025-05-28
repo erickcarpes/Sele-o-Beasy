@@ -18,7 +18,7 @@ export default function QuestionBar({
   onKeyDown,
 }: QuestionBarProps) {
   return (
-    <div className={`flex bg-[#2d2f37] rounded-4xl px-4 py-2 justify-between shadow-lg border-1 mt-2`}>
+    <div className={`flex bg-[#2d2f37] w-full rounded-4xl px-4 py-2 justify-between shadow-lg border-1 mt-2`}>
         <Input
           className="border-none text-white md:text-md caret-white focus-visible:ring-0 placeholder:text-gray-400"
           onChange={onChange}

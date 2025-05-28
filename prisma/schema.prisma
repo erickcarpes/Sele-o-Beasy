@@ -10,7 +10,7 @@ datasource db {
 
 model Chat {
   id String      @id @default(uuid())
-  nome String
+  nome String     @default("Novo Chat")
   createdAt DateTime @default(now())
   mensagens Mensagem[]
 }
@@ -21,7 +21,7 @@ model Mensagem {
   createdAt    DateTime @default(now())
   role UserRole
   chat_id String
-  chat   Chat   @relation(fields: [chat_id], references: [id])
+  chat   Chat   @relation(fields: [chat_id], references: [id], onDelete: Cascade)
 }
 
 enum UserRole {

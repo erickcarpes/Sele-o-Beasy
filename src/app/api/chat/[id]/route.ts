@@ -4,8 +4,11 @@ import { ChatService } from "@/services/chatService";
 const chatService = new ChatService();
 
 // GET específico: /api/chat/[id]
-export async function GET(req: NextRequest, context: { params: { id: string } }) {
-  const { id } = context.params;
+export async function GET(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
 
   if (!id) {
     return NextResponse.json({ error: "Id é necessário" }, { status: 400 });
@@ -21,12 +24,12 @@ export async function GET(req: NextRequest, context: { params: { id: string } })
   }
 }
 
-// PUT: Atualiza nome de um chat via /api/chat/[id]
-export async function PUT(
+// PATCH: Atualiza nome de um chat via /api/chat/[id]
+export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = params;
+  const { id } = await params;
   const { nome } = await request.json();
 
   if (!nome) {
@@ -44,8 +47,11 @@ export async function PUT(
 }
 
 // DELETE: /api/chat/[id]
-export async function DELETE({ params }: { params: { id: string } }) {
-  const { id } = params;
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
 
   try {
     await chatService.deleteChat({ id });

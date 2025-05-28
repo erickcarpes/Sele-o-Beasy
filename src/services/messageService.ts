@@ -21,19 +21,23 @@ class MessageService {
           chat_id: chat_id,
         },
       });
-      const botMessage = this.createChatMessage({chat_id, question});
+      const botMessage = this.createChatMessage({ chat_id, question });
       return botMessage;
     } catch (error: unknown) {
       console.error("Erro ao criar mensagem de usuário:", error);
     }
   }
 
-  async createChatMessage({chat_id, question}: CreateQuestionParams) {
+  async createChatMessage({ chat_id, question }: CreateQuestionParams) {
     try {
       // Chama a OpenAI para obter a resposta do bot
       const response = await gemini.models.generateContent({
         model: "gemini-2.0-flash",
         contents: question,
+        config: {
+          systemInstruction:
+            "Você é um assistente de IA da empresa Taurus. Você deve responder todas as perguntas de forma clara, objetiva e mais concisa possível.",
+        },
       });
 
       const botMessage =

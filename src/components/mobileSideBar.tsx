@@ -5,6 +5,7 @@ import Image from "next/image";
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -16,7 +17,30 @@ interface Chat {
   nome: string;
 }
 
-export function MobileSideBar({ chats }: { chats: Chat[] }) {
+interface MobileSideBarProps {
+  chats: Chat[];
+  refreshChats: () => void;
+}
+
+export function MobileSideBar({ chats, refreshChats }: MobileSideBarProps) {
+  const handleAddChat = async () => {
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (!response.ok) {
+      console.error("Erro ao criar novo chat");
+      // Toast de erro
+    } else {
+      // Toast de sucesso
+      // Atualizar a lista de chats, se necessário
+      console.log("Novo chat criado com sucesso");
+    }
+    refreshChats();
+  };
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -37,7 +61,7 @@ export function MobileSideBar({ chats }: { chats: Chat[] }) {
           <SheetTitle className="text-white text-2xl">Taurus</SheetTitle>
         </SheetHeader>
         <div className="flex flex-col gap-4 p-4">
-          <button className="flex w-full gap-3 border-l-1 px-2 py-1">
+          <button className="flex w-full gap-3 border-l-1 px-2 py-1 rounded-r-xl hover:cursor-pointer hover:bg-[#3a3c44]">
             <Info />
             <h2>Sobre nós</h2>
           </button>
@@ -46,11 +70,14 @@ export function MobileSideBar({ chats }: { chats: Chat[] }) {
             <Brain />
             <div className="flex justify-between w-full">
               <h2>Chats</h2>
-              <Plus className="rounded-sm border-1 bg-green-600" />
+              <Plus
+                onClick={() => handleAddChat()}
+                className="rounded-sm bg-green-600 hover:scale-110 hover:cursor-pointer transition-transform ease-in-out duration-300"
+              />
             </div>
           </div>
 
-          <ChatsDisplay chats={chats}></ChatsDisplay>
+          <ChatsDisplay refreshChats={refreshChats} chats={chats}></ChatsDisplay>
         </div>
       </SheetContent>
     </Sheet>

@@ -1839,7 +1839,7 @@ export namespace Prisma {
     /**
      * The data needed to create a Chat.
      */
-    data: XOR<ChatCreateInput, ChatUncheckedCreateInput>
+    data?: XOR<ChatCreateInput, ChatUncheckedCreateInput>
   }
 
   /**
@@ -3325,14 +3325,14 @@ export namespace Prisma {
 
   export type ChatCreateInput = {
     id?: string
-    nome: string
+    nome?: string
     createdAt?: Date | string
     mensagens?: MensagemCreateNestedManyWithoutChatInput
   }
 
   export type ChatUncheckedCreateInput = {
     id?: string
-    nome: string
+    nome?: string
     createdAt?: Date | string
     mensagens?: MensagemUncheckedCreateNestedManyWithoutChatInput
   }
@@ -3353,7 +3353,7 @@ export namespace Prisma {
 
   export type ChatCreateManyInput = {
     id?: string
-    nome: string
+    nome?: string
     createdAt?: Date | string
   }
 
@@ -3761,13 +3761,13 @@ export namespace Prisma {
 
   export type ChatCreateWithoutMensagensInput = {
     id?: string
-    nome: string
+    nome?: string
     createdAt?: Date | string
   }
 
   export type ChatUncheckedCreateWithoutMensagensInput = {
     id?: string
-    nome: string
+    nome?: string
     createdAt?: Date | string
   }
 

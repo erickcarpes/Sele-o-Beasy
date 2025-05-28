@@ -11,6 +11,7 @@ interface Mensagem {
   id: string;
   texto: string;
   role: "USER" | "CHAT";
+  createdAt?: Date;
 }
 
 interface Chat {
@@ -24,13 +25,14 @@ export default function Chatbot() {
   const [question, setQuestion] = useState<string>("");
   const [mensagens, setMensagens] = useState<Mensagem[]>([]);
   const [chats, setChats] = useState<Chat[]>([]);
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
 
   const handleSend = async (question: string) => {
     const userMessage: Mensagem = {
       id: new Date().toISOString(),
       texto: question,
       role: "USER",
+      createdAt: new Date(),
     };
     setMensagens((prevMensagens) => [...prevMensagens, userMessage]);
 
@@ -97,7 +99,6 @@ export default function Chatbot() {
       }
 
       const data = await response.json();
-      console.log("Resposta da API Mensagens:", data);
       setMensagens(data.mensagens);
       setIsLoading(false);
     };
@@ -119,8 +120,6 @@ export default function Chatbot() {
     }
 
     const data = await response.json();
-    console.log("Resposta da API Chats:", data);
-
     setChats(data);
   };
 
@@ -130,60 +129,64 @@ export default function Chatbot() {
 
   return (
     <div
-      className={`flex flex-col items-center w-screen max-h-screen p-5 bg-[#1b1c21]`}
+      className={`flex flex-col items-center w-screen h-screen p-5 bg-[#1b1c21]`}
     >
       <div className="flex w-full border-b-1 mb-5">
-        <div className="absolute top-5 left-5 rounded-3xl p-2">
-          <MobileSideBar chats={chats} />
+        <div className="absolute left-0 top-5 md:left-5 rounded-3xl p-2">
+          <MobileSideBar refreshChats={getAllChats} chats={chats} />
         </div>
         <div className="flex w-screen justify-center items-center">
           <h1 className="text-white text-4xl font-semibold mb-5">Taurus</h1>
         </div>
       </div>
       {isLoading ? (
-        <div className="flex flex-col w-full h-screen items-center justify-center gap-3">
+        <div className="flex flex-col w-full h-full items-center justify-center gap-3">
           <Spinner></Spinner>
           <p className="text-white">Carregando...</p>
         </div>
       ) : (
         <div
-          className={`flex flex-col w-full h-full max-h-full overflow-hidden justify-center md:w-120 lg:w-150`}
+          className={`flex flex-col w-full h-full justify-center overflow-hidden md:w-120 lg:w-150`}
         >
           {mensagens.length === 0 ? (
-            <div className="text-center text-white mb-3 justify-center">
+            <div className="flex flex-col justify-end text-white mb-3">
               <div className="flex justify-center gap-3">
                 <Image
                   src="/taurus-logo.png"
                   width={40}
-                  height={10}
+                  height={40}
                   alt="Taurus Logo"
                 />
                 <h1 className="text-2xl mb-2">Oi, eu sou o TaurusBot!</h1>
               </div>
-              <h3>Como posso te ajudar hoje?</h3>
+              <h3 className="flex justify-center">
+                Como posso te ajudar hoje?
+              </h3>
             </div>
           ) : (
             <div className="flex h-full overflow-y-auto gap-2">
               <Wrapper messages={mensagens}></Wrapper>
             </div>
           )}
-          <QuestionBar
-            onClick={() => {
-              if (question === "") return;
-              handleSend(question);
-              setQuestion("");
-            }}
-            onChange={(e) => setQuestion(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                if (question.trim() !== "") {
-                  handleSend(question.trim());
-                  setQuestion("");
+          <div>
+            <QuestionBar
+              onClick={() => {
+                if (question === "") return;
+                handleSend(question);
+                setQuestion("");
+              }}
+              onChange={(e) => setQuestion(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  if (question.trim() !== "") {
+                    handleSend(question.trim());
+                    setQuestion("");
+                  }
                 }
-              }
-            }}
-            value={question}
-          ></QuestionBar>
+              }}
+              value={question}
+            ></QuestionBar>
+          </div>
         </div>
       )}
     </div>
