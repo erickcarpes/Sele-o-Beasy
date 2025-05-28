@@ -71,8 +71,8 @@ export default function Home() {
         className={`flex items-center justify-center w-screen h-screen`}
       >
         <div className="flex justify-center items-center w-[70%] h-full  bg-[#1b1c21]">
-          <h1 className="text-white text-6xl font-semibold">
-            ChatBot - Taurus {chat_id}
+          <h1 className="text-white text-6xl font-bold">
+            ChatBot - Taurus
           </h1>
         </div>
 

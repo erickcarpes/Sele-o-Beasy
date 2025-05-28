@@ -132,7 +132,7 @@ export default function Chatbot() {
       className={`flex flex-col items-center w-screen h-screen p-5 bg-[#1b1c21]`}
     >
       <div className="flex w-full border-b-1 mb-5">
-        <div className="absolute left-0 top-5 md:left-5 rounded-3xl p-2">
+        <div className="absolute top-4 md:top-5 left-5">
           <MobileSideBar refreshChats={getAllChats} chats={chats} />
         </div>
         <div className="flex w-screen justify-center items-center">

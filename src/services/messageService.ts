@@ -10,9 +10,11 @@ interface CreateQuestionParams {
 const gemini = new GoogleGenAI({ apiKey: process.env.GOOGLE_GENAI_API_KEY });
 
 class MessageService {
+
   // Rota para criar mensagens no chat
   async createUserMessage({ chat_id, question }: CreateQuestionParams) {
     try {
+      
       // Salva a pergunta do usuário no banco de dados
       await prisma.mensagem.create({
         data: {
