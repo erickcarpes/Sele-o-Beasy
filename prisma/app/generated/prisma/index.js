@@ -175,7 +175,7 @@ const config = {
   },
   "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"./app/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Chat {\n  id        String     @id @default(uuid())\n  nome      String     @default(\"Novo Chat\")\n  createdAt DateTime   @default(now())\n  mensagens Mensagem[]\n}\n\nmodel Mensagem {\n  id        String   @id @default(uuid())\n  texto     String\n  createdAt DateTime @default(now())\n  role      UserRole\n  chat_id   String\n  chat      Chat     @relation(fields: [chat_id], references: [id], onDelete: Cascade)\n}\n\nenum UserRole {\n  CHAT\n  USER\n}\n",
   "inlineSchemaHash": "f1d8dcd9bc105e70fe09aee5e29b38303a151eeb80ff8964631110d10bc17d36",
-  "copyEngine": true
+  "copyEngine": false
 }
 
 const fs = require('fs')
@@ -212,9 +212,3 @@ const PrismaClient = getPrismaClient(config)
 exports.PrismaClient = PrismaClient
 Object.assign(exports, Prisma)
 
-// file annotations for bundling tools to include these files
-path.join(__dirname, "query_engine-windows.dll.node");
-path.join(process.cwd(), "prisma/app/generated/prisma/query_engine-windows.dll.node")
-// file annotations for bundling tools to include these files
-path.join(__dirname, "schema.prisma");
-path.join(process.cwd(), "prisma/app/generated/prisma/schema.prisma")

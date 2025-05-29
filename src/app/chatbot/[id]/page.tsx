@@ -22,7 +22,8 @@ interface Chat {
 
 export default function Chatbot() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isQuestionAnswering, setIsQuestionAnswering] = useState<boolean>(false);
+  const [isQuestionAnswering, setIsQuestionAnswering] =
+    useState<boolean>(false);
   const [question, setQuestion] = useState<string>("");
   const [mensagens, setMensagens] = useState<Mensagem[]>([]);
   const [chats, setChats] = useState<Chat[]>([]);
@@ -178,9 +179,11 @@ export default function Chatbot() {
               }}
               onChange={(e) => setQuestion(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  if (question.trim() !== "") {
-                    handleSend(question);
+                if (!isQuestionAnswering) {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    if (question.trim() !== "") {
+                      handleSend(question);
+                    }
                   }
                 }
               }}
