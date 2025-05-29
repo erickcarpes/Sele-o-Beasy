@@ -7,17 +7,17 @@ import Image from "next/image";
 import { useParams } from "next/navigation";
 import { MobileSideBar } from "@/components/mobileSideBar";
 
-interface Mensagem {
+interface Messages {
   id: string;
-  texto: string;
+  content: string;
   role: "USER" | "CHAT";
   createdAt?: Date;
 }
 
 interface Chat {
   id: string;
-  nome: string;
-  mensagens: Mensagem[];
+  name: string;
+  messages: Messages[];
 }
 
 export default function Chatbot() {
@@ -25,27 +25,27 @@ export default function Chatbot() {
   const [isQuestionAnswering, setIsQuestionAnswering] =
     useState<boolean>(false);
   const [question, setQuestion] = useState<string>("");
-  const [mensagens, setMensagens] = useState<Mensagem[]>([]);
+  const [messages, setMessages] = useState<Messages[]>([]);
   const [chats, setChats] = useState<Chat[]>([]);
   const { id } = useParams<{ id: string }>();
 
   const handleSend = async (question: string) => {
     setIsQuestionAnswering(true);
     setQuestion("");
-    const userMessage: Mensagem = {
+    const userMessage: Messages = {
       id: new Date().toISOString(),
-      texto: question,
+      content: question,
       role: "USER",
       createdAt: new Date(),
     };
-    setMensagens((prevMensagens) => [...prevMensagens, userMessage]);
+    setMessages((prevmessages) => [...prevmessages, userMessage]);
 
-    const chatMessage: Mensagem = {
+    const chatMessage: Messages = {
       id: "temp-id",
-      texto: "Digitando...",
+      content: "Digitando...",
       role: "CHAT",
     };
-    setMensagens((prevMensagens) => [...prevMensagens, chatMessage]);
+    setMessages((prevmessages) => [...prevmessages, chatMessage]);
 
     const response = await fetch("/api/message", {
       method: "POST",
@@ -56,7 +56,7 @@ export default function Chatbot() {
     });
 
     if (!response.ok) {
-      setMensagens((prev) =>
+      setMessages((prev) =>
         prev.map((msg) =>
           msg.id === "temp-id"
             ? { ...msg, texto: "Erro ao gerar resposta." }
@@ -68,12 +68,12 @@ export default function Chatbot() {
 
     const data = await response.json();
 
-    setMensagens((prev) =>
+    setMessages((prev) =>
       prev.map((msg) =>
         msg.id === "temp-id"
           ? {
               id: new Date().toISOString(),
-              texto: data.message,
+              content: data.message,
               role: "CHAT",
             }
           : msg
@@ -97,12 +97,12 @@ export default function Chatbot() {
       });
 
       if (!response.ok) {
-        console.error("Erro ao buscar mensagens");
+        console.error("Erro ao buscar messages");
         return [];
       }
 
       const data = await response.json();
-      setMensagens(data.mensagens);
+      setMessages(data.messages);
       setIsLoading(false);
     };
 
@@ -151,7 +151,7 @@ export default function Chatbot() {
         <div
           className={`flex flex-col w-full h-full justify-center overflow-hidden md:w-120 lg:w-150`}
         >
-          {mensagens.length === 0 ? (
+          {messages.length === 0 ? (
             <div className="flex flex-col justify-end text-white mb-3">
               <div className="flex justify-center gap-3">
                 <Image
@@ -168,7 +168,7 @@ export default function Chatbot() {
             </div>
           ) : (
             <div className="flex h-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent gap-2">
-              <Wrapper messages={mensagens}></Wrapper>
+              <Wrapper messages={messages}></Wrapper>
             </div>
           )}
           <div>

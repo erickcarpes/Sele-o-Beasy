@@ -1,14 +1,14 @@
 import { useEffect, useRef } from "react";
 import Bubble from "./bubble";
 
-interface Mensagem {
+interface Messages {
   id: string;
-  texto: string;
+  content: string;
   role: "USER" | "CHAT";
   createdAt?: Date;
 }
 
-export default function Wrapper({ messages }: { messages: Mensagem[] }) {
+export default function Wrapper({ messages }: { messages: Messages[] }) {
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -18,8 +18,8 @@ export default function Wrapper({ messages }: { messages: Mensagem[] }) {
   return (
     <div className={`flex flex-col w-full bg-[#1b1c21]`}>
       <div className="flex flex-col gap-4">
-        {messages.map((msg: Mensagem) => (
-          <Bubble key={msg.id} message={msg.texto} role={msg.role} createdAt={msg.createdAt}></Bubble>
+        {messages.map((msg: Messages) => (
+          <Bubble key={msg.id} message={msg.content} role={msg.role} createdAt={msg.createdAt}></Bubble>
         ))}
       </div>
       <div ref={bottomRef} />

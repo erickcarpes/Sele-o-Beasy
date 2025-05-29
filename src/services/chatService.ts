@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma";
 
 interface CreateParams {
-  nome: string;
+  name: string;
 }
 
 interface ReadParams {
@@ -10,16 +10,16 @@ interface ReadParams {
 
 interface UpdateParams {
   id: string;
-  nome: string;
+  name: string;
 }
 
 class ChatService {
     
-  async createChat({ nome }: CreateParams) {
+  async createChat({ name }: CreateParams) {
     try {
       const chat = await prisma.chat.create({
         data: {
-          nome: nome,
+          name: name,
         },
       });
       return chat;
@@ -34,7 +34,7 @@ class ChatService {
       const chat = await prisma.chat.findUnique({
         where: { id: id },
         include: {
-          mensagens: {
+          messages: {
             orderBy: {
               createdAt: "asc",
             },
@@ -76,14 +76,14 @@ class ChatService {
     }
   }
 
-  async updateChat({ id, nome }: UpdateParams) {
-    if (!id || !nome) {
+  async updateChat({ id, name }: UpdateParams) {
+    if (!id || !name) {
       throw new Error("ID e nome são obrigatórios para atualizar o chat.");
       }
     try {
       const chat = await prisma.chat.update({
         where: { id: id },
-        data: { nome: nome },
+        data: { name: name },
       });
       return chat;
     } catch (error) {

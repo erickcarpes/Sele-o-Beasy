@@ -7,10 +7,10 @@ const chatService = new ChatService();
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => null);
 
-  const nome = body?.nome || "Novo Chat";
+  const name = body?.name || "Novo Chat";
 
   try {
-    const chat = await chatService.createChat({nome});
+    const chat = await chatService.createChat({name});
     return NextResponse.json(chat, { status: 201 });
   } catch (error: unknown) {
     const errorMessage =

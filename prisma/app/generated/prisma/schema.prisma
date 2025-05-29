@@ -9,15 +9,15 @@ datasource db {
 }
 
 model Chat {
-  id        String     @id @default(uuid())
-  nome      String     @default("Novo Chat")
-  createdAt DateTime   @default(now())
-  mensagens Mensagem[]
+  id        String    @id @default(uuid())
+  name      String    @default("Novo Chat")
+  createdAt DateTime  @default(now())
+  messages  Message[]
 }
 
-model Mensagem {
+model Message {
   id        String   @id @default(uuid())
-  texto     String
+  content   String
   createdAt DateTime @default(now())
   role      UserRole
   chat_id   String

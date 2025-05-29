@@ -16,7 +16,7 @@ import { AboutDialog } from "./aboutDialog";
 
 interface Chat {
   id: string;
-  nome: string;
+  name: string;
 }
 
 interface MobileSideBarProps {

@@ -6,7 +6,7 @@ import { toast } from "sonner";
 
 interface Chat {
   id: string;
-  nome: string;
+  name: string;
 }
 
 interface ChatsDisplayProps {
@@ -45,7 +45,7 @@ export function ChatsDisplay({ chats, refreshChats }: ChatsDisplayProps) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ nome: newChatName }),
+      body: JSON.stringify({ name: newChatName }),
     });
     if (!response.ok) {
       toast.error("Erro ao atualizar o nome do chat!");
@@ -75,7 +75,7 @@ export function ChatsDisplay({ chats, refreshChats }: ChatsDisplayProps) {
             <div className="flex w-full gap-2 justify-between">
               <input
                 type="text"
-                defaultValue={chat.nome}
+                defaultValue={chat.name}
                 className="w-full focus-visible:ring-0 focus-visible:border-0 focus-visible:outline-none"
                 ref={inputRef}
                 onChange={(e) => {
@@ -100,7 +100,7 @@ export function ChatsDisplay({ chats, refreshChats }: ChatsDisplayProps) {
             <div className="flex w-full gap-2 justify-between">
               <Link href={`/chatbot/${chat.id}`} className="w-full overflow-hidden whitespace-nowrap">
                 <button className="text-white rounded-sm overflow-ellipsis overflow-hidden text-left w-full hover:bg-[#3a3c44] hover:cursor-pointer">
-                  {chat.nome}
+                  {chat.name}
                 </button>
               </Link>
               <div className="flex gap-2">

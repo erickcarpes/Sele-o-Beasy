@@ -16,9 +16,9 @@ class MessageService {
     try {
       
       // Salva a pergunta do usuário no banco de dados
-      await prisma.mensagem.create({
+      await prisma.message.create({
         data: {
-          texto: question,
+          content: question,
           role: "USER",
           chat_id: chat_id,
         },
@@ -46,9 +46,9 @@ class MessageService {
         response.text || "Desculpe, não consegui entender a pergunta.";
 
       // Salva a mensagem do bot no banco
-      await prisma.mensagem.create({
+      await prisma.message.create({
         data: {
-          texto: botMessage,
+          content: botMessage,
           role: "CHAT",
           chat_id: chat_id,
         },

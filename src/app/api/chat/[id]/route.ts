@@ -30,14 +30,14 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const { nome } = await request.json();
+  const { name } = await request.json();
 
-  if (!nome) {
-    return NextResponse.json({ error: "Nome is required" }, { status: 400 });
+  if (!name) {
+    return NextResponse.json({ error: "Nome é necessário" }, { status: 400 });
   }
 
   try {
-    const updatedChat = await chatService.updateChat({ id, nome });
+    const updatedChat = await chatService.updateChat({ id, name });
     return NextResponse.json(updatedChat, { status: 200 });
   } catch (error: unknown) {
     const errorMessage =
