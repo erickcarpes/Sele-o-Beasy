@@ -22,12 +22,15 @@ interface Chat {
 
 export default function Chatbot() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isQuestionAnswering, setIsQuestionAnswering] = useState<boolean>(false);
   const [question, setQuestion] = useState<string>("");
   const [mensagens, setMensagens] = useState<Mensagem[]>([]);
   const [chats, setChats] = useState<Chat[]>([]);
   const { id } = useParams<{ id: string }>();
 
   const handleSend = async (question: string) => {
+    setIsQuestionAnswering(true);
+    setQuestion("");
     const userMessage: Mensagem = {
       id: new Date().toISOString(),
       texto: question,
@@ -52,7 +55,6 @@ export default function Chatbot() {
     });
 
     if (!response.ok) {
-      console.error("Erro ao enviar a mensagem");
       setMensagens((prev) =>
         prev.map((msg) =>
           msg.id === "temp-id"
@@ -64,7 +66,6 @@ export default function Chatbot() {
     }
 
     const data = await response.json();
-    console.log("Resposta da do GEMINI:", data);
 
     setMensagens((prev) =>
       prev.map((msg) =>
@@ -77,6 +78,7 @@ export default function Chatbot() {
           : msg
       )
     );
+    setIsQuestionAnswering(false);
   };
 
   useEffect(() => {
@@ -164,7 +166,7 @@ export default function Chatbot() {
               </h3>
             </div>
           ) : (
-            <div className="flex h-full overflow-y-auto gap-2">
+            <div className="flex h-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent gap-2">
               <Wrapper messages={mensagens}></Wrapper>
             </div>
           )}
@@ -173,17 +175,16 @@ export default function Chatbot() {
               onClick={() => {
                 if (question === "") return;
                 handleSend(question);
-                setQuestion("");
               }}
               onChange={(e) => setQuestion(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   if (question.trim() !== "") {
-                    handleSend(question.trim());
-                    setQuestion("");
+                    handleSend(question);
                   }
                 }
               }}
+              isQuestionAnswering={isQuestionAnswering}
               value={question}
             ></QuestionBar>
           </div>

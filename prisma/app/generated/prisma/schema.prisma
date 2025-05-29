@@ -21,7 +21,7 @@ model Mensagem {
   createdAt DateTime @default(now())
   role      UserRole
   chat_id   String
-  chat      Chat     @relation(fields: [chat_id], references: [id])
+  chat      Chat     @relation(fields: [chat_id], references: [id], onDelete: Cascade)
 }
 
 enum UserRole {

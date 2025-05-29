@@ -1,8 +1,8 @@
-import { Trash } from "lucide-react";
-import { Pencil } from "lucide-react";
-import { Check } from "lucide-react";
+import { Trash, Check, Pencil } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { Toaster } from "@/components/ui/sonner";
+import { toast } from "sonner";
 
 interface Chat {
   id: string;
@@ -15,7 +15,7 @@ interface ChatsDisplayProps {
 }
 
 export function ChatsDisplay({ chats, refreshChats }: ChatsDisplayProps) {
-  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [editingChatId, setEditingChatId] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [newChatName, setNewChatName] = useState<string>("");
 
@@ -28,14 +28,15 @@ export function ChatsDisplay({ chats, refreshChats }: ChatsDisplayProps) {
     });
 
     if (!response.ok) {
-      // Toast de erro
-      console.error("Erro ao deletar o chat");
+      toast.error("Erro ao deletar chat", {
+        description: (
+          <span className="text-sm text-red-700">Você não pode estar no chat que desejas deletar.</span>
+        ),
+      });
     } else {
-      // Toast de sucesso
-      // Atualizar a lista de chats
-      console.log("Chat deletado com sucesso");
+      toast.success("Chat deletado com sucesso");
+      refreshChats();
     }
-    refreshChats(); // Chama a função para atualizar a lista de chats
   };
 
   const handlePatchChat = async (id: string) => {
@@ -47,32 +48,30 @@ export function ChatsDisplay({ chats, refreshChats }: ChatsDisplayProps) {
       body: JSON.stringify({ nome: newChatName }),
     });
     if (!response.ok) {
-      // Toast de erro
-      console.error("Erro ao atualizar o nome do chat");
+      toast.error("Erro ao atualizar o nome do chat!");
     } else {
-      // Toast de sucesso
-      // Atualizar a lista de chats, se necessário
-      console.log("Nome do chat atualizado com sucesso");
+      toast.success("Nome do chat atualizado com sucesso!")
+      refreshChats();
     }
   };
 
   useEffect(() => {
-    if (isEditing && inputRef.current) {
+    if (editingChatId && inputRef.current) {
       inputRef.current.focus();
       inputRef.current.select();
     }
-  }, [isEditing]);
+  }, [editingChatId]);
 
   return (
-    <div className="flex flex-col w-full max-h-full gap-1 overflow-y-auto border-1 rounded-xl rounded-t-none">
+    <div className="flex flex-col w-full max-h-95 lg:max-h-115 gap-1 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent overflow-y-auto border-1 rounded-br-lg">
       {chats.map((chat, index) => (
         <div
           key={chat.id}
-          className={`flex p-2 w-full justify-between gap-2 rounded-xl ${
+          className={`flex p-2 w-full justify-between gap-2 rounded-br-lg ${
             chats.length > 1 && chats.length !== index + 1 ? "border-b-1" : ""
           }`}
         >
-          {isEditing ? (
+          {editingChatId === chat.id? (
             <div className="flex w-full gap-2 justify-between">
               <input
                 type="text"
@@ -82,12 +81,15 @@ export function ChatsDisplay({ chats, refreshChats }: ChatsDisplayProps) {
                 onChange={(e) => {
                   setNewChatName(e.target.value);
                 }}
-                onBlur={() => setIsEditing(false)}
               />
               <button
                 onClick={() => {
-                  setIsEditing(false);
+                  if (!newChatName.trim()) {
+                    return;
+                  }
                   handlePatchChat(chat.id);
+                  setEditingChatId(null);
+                  setNewChatName("");
                 }}
                 className="text-white rounded-sm overflow-hidden hover:bg-[#3a3c44] hover:cursor-pointer"
               >
@@ -96,16 +98,14 @@ export function ChatsDisplay({ chats, refreshChats }: ChatsDisplayProps) {
             </div>
           ) : (
             <div className="flex w-full gap-2 justify-between">
-              <Link href={`/chatbot/${chat.id}`} className="w-full">
-                <button
-                  className="text-white rounded-sm overflow-hidden hover:bg-[#3a3c44] hover:cursor-pointer"
-                >
+              <Link href={`/chatbot/${chat.id}`} className="w-full overflow-hidden whitespace-nowrap">
+                <button className="text-white rounded-sm overflow-ellipsis overflow-hidden text-left w-full hover:bg-[#3a3c44] hover:cursor-pointer">
                   {chat.nome}
                 </button>
               </Link>
               <div className="flex gap-2">
                 <Pencil
-                  onClick={() => setIsEditing(true)}
+                  onClick={() => setEditingChatId(chat.id)}
                   className="rounded-sm bg-blue-700 hover:scale-110 hover:cursor-pointer transition-transform ease-in-out duration-300"
                 ></Pencil>
                 <Trash
@@ -117,6 +117,7 @@ export function ChatsDisplay({ chats, refreshChats }: ChatsDisplayProps) {
           )}
         </div>
       ))}
+      <Toaster />
     </div>
   );
 }

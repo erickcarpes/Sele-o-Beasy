@@ -8,7 +8,6 @@ export default function Home() {
   const [chat_id, setChat_id] = useState<string | null>(null);
   const [isWaitingToRedirect, setIsWaitingToRedirect] = useState(false);
   const [alert, setAlert] = useState<{
-    title: string;
     description: string;
   } | null>(null);
   const router = useRouter();
@@ -44,9 +43,8 @@ export default function Home() {
   const handleClick = async () => {
     if (!chat_id) {
       setAlert({
-        title: "Desculpe!",
         description:
-          "Aguarde um momento, estamos buscando o melhor chat para você.",
+          "Aguarde um momento, estamos te redirecionando para o melhor chat!",
       });
 
       setIsWaitingToRedirect(true);
@@ -64,19 +62,16 @@ export default function Home() {
 
   return (
     <>
-      {alert && (
-        <AlertComp title={alert.title} description={alert.description} />
-      )}
-      <div
-        className={`flex items-center justify-center w-screen h-screen`}
-      >
-        <div className="flex justify-center items-center w-[70%] h-full  bg-[#1b1c21]">
-          <h1 className="text-white text-6xl font-bold">
-            ChatBot - Taurus
-          </h1>
+      {alert && <AlertComp description={alert.description} />}
+      <div className={`flex md:flex-row flex-col items-center justify-center w-screen h-screen`}>
+        <div className="flex flex-col justify-center items-center w-full md:w-[70%] h-[70%] md:h-full bg-[#1b1c21]">
+          <h1 className="text-white text-4xl md:text-6xl font-semibold text-center">ChatBot - Taurus</h1>
+          <div className="flex mt-3">
+            <h2 className="text-slate-300 text-md md:text-2xl">O seu Assistente Inteligente.</h2>
+          </div>
         </div>
 
-        <div className="flex justify-center items-center w-[30%] h-full bg-red-700">
+        <div className="flex justify-center items-center w-full md:w-[30%] h-[30%] md:h-full bg-red-700">
           <Button
             onClick={handleClick}
             className="w-40 h-17 bg-white text-2xl text-red-700 hover:bg-white hover:cursor-pointer hover:scale-110 transition-transform ease-in-out duration-300"

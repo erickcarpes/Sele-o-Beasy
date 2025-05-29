@@ -2,9 +2,11 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { Brain, Info, Bot } from "lucide-react";
 import Image from "next/image";
+import { toast, Toaster } from "sonner";
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -31,14 +33,11 @@ export function MobileSideBar({ chats, refreshChats }: MobileSideBarProps) {
       },
     });
     if (!response.ok) {
-      console.error("Erro ao criar novo chat");
-      // Toast de erro
+      toast.error("Erro ao criar novo chat!");
     } else {
-      // Toast de sucesso
-      // Atualizar a lista de chats, se necessário
-      console.log("Novo chat criado com sucesso");
+      toast.success("Novo chat criado com sucesso!");
+      refreshChats();
     }
-    refreshChats();
   };
 
   return (
@@ -56,25 +55,27 @@ export function MobileSideBar({ chats, refreshChats }: MobileSideBarProps) {
       </SheetTrigger>
       <SheetContent
         side="left"
-        className="bg-[#2d2f37] text-white w-50 rounded-r-4xl"
+        className="bg-[#2d2f37] text-white w-50 md:w-60 rounded-r-4xl"
       >
         <SheetHeader>
           <SheetTitle className="text-white text-2xl">Taurus</SheetTitle>
+          <SheetDescription></SheetDescription>
         </SheetHeader>
         <div className="flex flex-col gap-4 p-4">
           <AboutDialog
             buttonName="Sobre nós"
             title="Sobre a Taurus:"
-            description="A Taurus é uma empresa corporativa tradicional, com uma cultura marcada por hierarquias rígidas e lideranças da Geração X pouco familiarizadas com tecnologia. Mesmo assim, é um ambiente onde ideias ousadas podem ganhar espaço — especialmente quando vêm de pessoas comprometidas.
-Cleiton, um desenvolvedor talentoso, viu na sobrecarga de tarefas manuais uma chance de sugerir o uso de inteligência artificial para otimizar processos. Inicialmente rejeitada, sua proposta despertou interesse nos líderes, que agora aguardam ansiosos pelo protótipo de um chatbot com a identidade da Taurus. Uma oportunidade única para mostrar como tradição e inovação podem se complementar."
+            description1="A Taurus é uma empresa corporativa tradicional, com uma cultura marcada por hierarquias rígidas e lideranças da Geração X pouco familiarizadas com tecnologia. Mesmo assim, é um ambiente onde ideias ousadas podem ganhar espaço — especialmente quando vêm de pessoas comprometidas."
+            description2="Foi nesse cenário que, Cleiton, um desenvolvedor talentoso, viu na sobrecarga de tarefas manuais uma chance de sugerir o uso de inteligência artificial para otimizar processos. Inicialmente rejeitada, sua proposta despertou interesse nos líderes, que agora aguardam ansiosos pelo protótipo de um chatbot com a identidade da Taurus. Uma oportunidade única para mostrar como tradição e inovação podem se complementar."
             icon={<Info />}
           ></AboutDialog>
 
           <AboutDialog
             buttonName="ChatBot"
             title="Sobre o ChatBot:"
-            description="O ChatBot Taurus é uma ferramenta inovadora que visa otimizar a comunicação e a eficiência dentro da empresa. Desenvolvido para atender às necessidades específicas da Taurus, ele combina inteligência artificial com a identidade corporativa, proporcionando uma experiência única e personalizada."
-            icon={<Bot/>}
+            description1="O ChatBot da Taurus é uma ferramenta inovadora que visa otimizar a comunicação interna e agilizar processos. Com uma interface amigável e intuitiva, ele permite que os colaboradores acessem informações, realizem tarefas e interajam com o sistema de forma rápida e eficiente."
+            description2="Desenvolvido com tecnologia de ponta, o ChatBot é capaz de aprender com as interações, tornando-se cada vez mais inteligente e adaptado às necessidades da empresa. Ele é um passo importante na jornada da Taurus rumo à transformação digital."
+            icon={<Bot />}
           ></AboutDialog>
 
           <div className="flex w-full gap-3 border-l-1 px-2 py-1">
@@ -94,6 +95,7 @@ Cleiton, um desenvolvedor talentoso, viu na sobrecarga de tarefas manuais uma ch
           ></ChatsDisplay>
         </div>
       </SheetContent>
+      <Toaster />
     </Sheet>
   );
 }

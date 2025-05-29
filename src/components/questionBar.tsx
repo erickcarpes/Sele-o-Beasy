@@ -9,6 +9,7 @@ interface QuestionBarProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  isQuestionAnswering?: boolean;
 }
 
 export default function QuestionBar({
@@ -16,6 +17,7 @@ export default function QuestionBar({
   onClick,
   value,
   onKeyDown,
+  isQuestionAnswering,
 }: QuestionBarProps) {
   return (
     <div className={`flex bg-[#2d2f37] w-full rounded-4xl px-4 py-2 justify-between shadow-lg border-1 mt-2`}>
@@ -27,6 +29,7 @@ export default function QuestionBar({
           onKeyDown={onKeyDown}
         ></Input>
         <Button
+        disabled={isQuestionAnswering}
           onClick={onClick}
           className="bg-transparent rounded-4xl gap-0 p-0 hover:bg-[#44464d] hover:cursor-pointer"
         >
